@@ -1,1 +1,1 @@
-.\venv\bin\pyinstaller -F .\packman.py
+.\venv\Scripts\pyinstaller -F --noconsole .\packman.py
