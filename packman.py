@@ -13,6 +13,7 @@ enemy_x = 6
 enemy_y = 4
 WIDTH = 30
 HEIGHT = 20
+score = 0
 update = True
 
 block_size = 40
@@ -51,7 +52,6 @@ def generate_food():
 
     for i in range(food_count_to_generate):
         point = random.choice(points_local)
-        print(point)
         pole[point[1]][point[0]] = food_s
         food_count += 1
         points_local.remove(point)
@@ -124,7 +124,7 @@ def print_pole_gui(screen):
 
 
 def start():
-    global state, pole, PACKMAN_X, PACKMAN_Y, enemy_x, enemy_y, food_count
+    global state, pole, PACKMAN_X, PACKMAN_Y, enemy_x, enemy_y, food_count, score
     state = GAME
     pole = []
     food_count = 0
@@ -132,6 +132,7 @@ def start():
     PACKMAN_Y = 0
     enemy_x = 6
     enemy_y = 4
+    score = 0
 
     generate_pole()
     generate_block()
@@ -368,7 +369,7 @@ def print_pole():
 
 
 def move(x, y, hero, prev_x, prev_y):
-    global update, food_s, food_count
+    global update, food_s, food_count, score
 
     if y >= HEIGHT:
         y = 0
@@ -384,6 +385,9 @@ def move(x, y, hero, prev_x, prev_y):
 
     if pole[y][x] == food_s:
         food_count -= 1
+
+        if hero == pacman:
+            score += 1
 
     if pole[y][x] == "|" or pole[y][x] == "-":
         return prev_x, prev_y
@@ -519,6 +523,11 @@ if __name__ == '__main__':
 
                 check_game_over()
                 print_pole_gui(screen)
+
+                font = pygame.font.SysFont('Calibri', 18)
+                text_surface = font.render(f"score: {score}", False, (255, 255, 255))
+                screen.blit(text_surface, (10, 10))
+
             if food_count == 0:
                 generate_food()
         if state == MENU:
