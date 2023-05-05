@@ -520,6 +520,8 @@ if __name__ == '__main__':
                             go('left')
                         if event.key == pygame.K_RIGHT:
                             go('right')
+                        if event.key == pygame.K_ESCAPE:
+                            state = MENU
 
                 check_game_over()
                 print_pole_gui(screen)
