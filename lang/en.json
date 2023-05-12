@@ -1,0 +1,11 @@
+{
+  "start": "Start",
+  "setting": "Setting",
+  "exit": "Exit",
+  "game_over": "Game over",
+  "score": "Score",
+  "eat": "Eat",
+  "blocks": "Blocks",
+  "enemy_step": "Enemy step",
+  "language": "Language"
+}

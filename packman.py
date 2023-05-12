@@ -1,5 +1,6 @@
 import time
 import random
+import os
 
 gui = True
 if not gui:
@@ -26,6 +27,7 @@ pacman_direction = "left"
 food_s = "+"
 food_count_to_generate = 15
 block_count_to_generate = 50
+
 food_count = 0
 
 enemy = "&"
@@ -42,6 +44,15 @@ buttons = []
 settings_buttons = []
 
 runing = True
+
+langs = []
+selected_lang = 'en'
+
+
+def get_langs():
+    lang_files = os.listdir('lang')
+    for lang_file in lang_files:
+        langs.append(lang_file.replace('.json', ''))
 
 
 def generate_food():
@@ -139,7 +150,6 @@ def start():
     generate_food()
 
 
-
 def setting():
     global state
     state = SETTINGS
@@ -226,9 +236,28 @@ def change_block_count(plus=True):
     block_count_to_generate += 1
 
 
+def change_lang(up=True):
+    global selected_lang
+
+    index = langs.index(selected_lang)
+
+    if up:
+        index += 1
+    else:
+        index -= 1
+
+    if index >= len(langs):
+        index = 0
+    if index < 0:
+        index = len(langs) - 1
+
+    selected_lang = langs[index]
+
+
 def go_to_menu():
     global state
     state = MENU
+
 
 def print_sattings(first=False):
     screen_w = WIDTH * block_size
@@ -319,11 +348,13 @@ def print_sattings(first=False):
         )
         return bot_y + b_h
 
-    last_y = print_button(x, y, "Кол-во еды", food_count_to_generate, change_food_count,
+    last_y = print_button(x, y, "Eat", food_count_to_generate, change_food_count,
                           lambda: change_food_count(False))
-    last_y = print_button(x, last_y, "Кол-во стен", block_count_to_generate, change_block_count,
+    last_y = print_button(x, last_y, "Blocks", block_count_to_generate, change_block_count,
                           lambda: change_block_count(False))
-    print_button(x, last_y, "Скорость злодея", int(enemy_step * 10), change_enemy_step,
+    last_y = print_button(x, last_y, "Language", selected_lang, change_lang,
+                          lambda: change_lang(False))
+    print_button(x, last_y, "Enemy step", int(enemy_step * 10), change_enemy_step,
                  lambda: change_enemy_step(False))
 
     large_button_padding = 20
@@ -340,7 +371,7 @@ def print_sattings(first=False):
         )
     )
 
-    text_surface = font.render("Назад", False, (255, 255, 255))
+    text_surface = font.render("Exit", False, (255, 255, 255))
     screen.blit(text_surface, (x + large_button_padding + large_button_w // 2 - text_surface.get_width() // 2,
                                large_button_y + large_button_padding + large_button_h // 2 - text_surface.get_height() // 2))
     if first:
@@ -486,6 +517,7 @@ if __name__ == '__main__':
     generate_pole()
     generate_block()
     generate_food()
+    get_langs()
 
     if not gui:
         keyboard.add_hotkey("w", lambda: go('up'))
